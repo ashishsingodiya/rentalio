@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/context/AppContext";
+import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { HelpCircle, Clock, CheckCircle, XCircle, ChevronRight, AlertTriangle } from "lucide-react";
+import { useAppContext } from "../../context/AppContext";
 
 const STATUS_TABS = ["all", "open", "in_progress", "resolved", "closed"];
 
@@ -31,10 +31,16 @@ const priorityBadgeClass = (priority) => {
 const tabLabel = (tab) => (tab === "in_progress" ? "In Progress" : tab.charAt(0).toUpperCase() + tab.slice(1));
 
 const AdminTickets = () => {
-  const { axios, appLoading } = useContext(AppContext);
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
+
+    useEffect(() => {
+    if (!appLoading && (!user || user.role !== "admin")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     const fetchTickets = async () => {

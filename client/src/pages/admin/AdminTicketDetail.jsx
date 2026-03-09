@@ -1,7 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { AppContext } from "@/context/AppContext";
+import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/Loading";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,14 +23,19 @@ const statusBadgeClass = (status) => {
 const statusLabel = (status) => (status === "in_progress" ? "In Progress" : status.charAt(0).toUpperCase() + status.slice(1));
 
 const AdminTicketDetail = () => {
-  const { axios, appLoading } = useAppContext();
+  const { axios, user, navigate, appLoading } = useAppContext();
   const { id } = useParams();
-  const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef(null);
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "admin")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     const fetchTicket = async () => {

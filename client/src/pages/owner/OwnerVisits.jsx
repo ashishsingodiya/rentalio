@@ -18,7 +18,7 @@ const STATUS_STYLES = {
 };
 
 const OwnerVisits = () => {
-  const { axios, appLoading } = useAppContext();
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [visits, setVisits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rejectingId, setRejectingId] = useState(null);
@@ -26,6 +26,12 @@ const OwnerVisits = () => {
   const [scheduleVisit, setScheduleVisit] = useState(null);
   const [markingVisitedId, setMarkingVisitedId] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "owner")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     if (appLoading) return;
@@ -45,25 +51,6 @@ const OwnerVisits = () => {
     };
     fetchVisits();
   }, [appLoading]);
-
-  const handleReject = async () => {
-    const id = confirmRejectId;
-    setConfirmRejectId(null);
-    setRejectingId(id);
-    try {
-      const { data } = await axios.post("/api/visit/reject", { visitId: id });
-      if (data.success) {
-        toast.success(data.message);
-        setVisits((prev) => prev.map((v) => (v._id === id ? { ...v, status: "rejected" } : v)));
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setRejectingId(null);
-    }
-  };
 
   const handleScheduled = (visitId, slot) => {
     setVisits((prev) => prev.map((v) => (v._id === visitId ? { ...v, status: "scheduled", scheduledSlot: slot } : v)));

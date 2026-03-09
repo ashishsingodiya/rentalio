@@ -31,7 +31,6 @@ const ChecklistStep = ({ label, completed }) => (
   </span>
 );
 
-// ─── Inventory editor for a single move-in ───────────────────────────────────
 const InventoryEditor = ({ moveIn, onSaved }) => {
   const { axios } = useAppContext();
   const [items, setItems] = useState(moveIn.checklist.inventory.items.length > 0 ? moveIn.checklist.inventory.items.map((i) => ({ ...i })) : [{ name: "", condition: "good", notes: "" }]);
@@ -119,15 +118,20 @@ const InventoryEditor = ({ moveIn, onSaved }) => {
   );
 };
 
-// ─── Main page ────────────────────────────────────────────────────────────────
+
 const OwnerMoveIns = () => {
-  const { axios, appLoading } = useAppContext();
-  const navigate = useNavigate();
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [moveIns, setMoveIns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [confirmingId, setConfirmingId] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "owner")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     if (appLoading) return;

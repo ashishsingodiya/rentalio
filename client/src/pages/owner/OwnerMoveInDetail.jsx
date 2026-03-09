@@ -118,13 +118,18 @@ const InventoryEditor = ({ moveIn, onSaved }) => {
 
 const OwnerMoveInDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { axios, appLoading } = useAppContext();
+  const { axios, user, navigate, appLoading } = useAppContext();
 
   const [moveIn, setMoveIn] = useState(null);
   const [loading, setLoading] = useState(true);
   const [confirmingMoveIn, setConfirmingMoveIn] = useState(false);
   const [showInventoryEditor, setShowInventoryEditor] = useState(false);
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "owner")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     if (appLoading) return;

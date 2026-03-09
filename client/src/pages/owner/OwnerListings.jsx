@@ -15,11 +15,17 @@ const STATUS_STYLES = {
 };
 
 const OwnerListings = () => {
-  const { axios, navigate, appLoading } = useAppContext();
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
   const [confirmId, setConfirmId] = useState(null);
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "owner")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     const fetchListings = async () => {

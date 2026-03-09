@@ -18,7 +18,7 @@ const LISTING_STATUS_STYLES = {
 };
 
 const OwnerDashboard = () => {
-  const { axios, user, appLoading } = useAppContext();
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [listings, setListings] = useState([]);
   const [visits, setVisits] = useState([]);
   const [moveIns, setMoveIns] = useState([]);
@@ -26,6 +26,14 @@ const OwnerDashboard = () => {
   const [scheduleVisit, setScheduleVisit] = useState(null);
   const [confirmRejectId, setConfirmRejectId] = useState(null);
   const [rejectingId, setRejectingId] = useState(null);
+
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "owner")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
+
 
   useEffect(() => {
     if (appLoading) return;

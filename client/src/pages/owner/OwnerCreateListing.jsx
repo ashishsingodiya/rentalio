@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Upload, X, Home, MapPin, IndianRupee, FileText, Settings, Loader2, ClipboardList, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,7 +47,13 @@ const OwnerCreateListing = () => {
   const [rules, setRules] = useState([]);
   const [ruleInput, setRuleInput] = useState("");
 
-  const { user, axios } = useAppContext();
+  const { axios, user, navigate, appLoading } = useAppContext();
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "owner")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   const addRule = () => {
     if (!ruleInput.trim()) return;

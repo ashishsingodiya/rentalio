@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/context/AppContext";
+import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,7 @@ const STATUS_ACTIONS = {
 };
 
 const AdminListings = () => {
-  const { axios, appLoading } = useContext(AppContext);
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");

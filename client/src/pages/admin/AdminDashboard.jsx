@@ -1,17 +1,23 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/context/AppContext";
 import Loading from "@/components/Loading";
 import { Link } from "react-router-dom";
 import { Building2, CheckCircle, HelpCircle, Clock, ChevronRight, Star, Home, XCircle, FileText, AlertTriangle, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { useAppContext } from "../../context/AppContext";
 
 const AdminDashboard = () => {
-  const { axios, appLoading } = useContext(AppContext);
+  const { axios, user, navigate, appLoading } = useAppContext();
   const [listings, setListings] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "admin")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     const fetchData = async () => {
