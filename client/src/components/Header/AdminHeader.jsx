@@ -9,8 +9,6 @@ const navItems = [
   { label: "Home", path: "/", icon: Home },
   { label: "Browse", path: "/browse", icon: Search },
   { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Listings", path: "/admin/listings", icon: List },
-  { label: "Tickets", path: "/admin/tickets", icon: HelpCircle },
 ];
 
 const dropdownItems = [
