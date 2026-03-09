@@ -44,7 +44,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4 min-h-[82vh]">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle>Create your account</CardTitle>

@@ -216,7 +216,7 @@ const BrowsePage = () => {
 
       <div className="flex-4">
         {isLoading ? (
-          <Loading message="Loading properties" className="" />
+          <Loading message="Loading properties" className="min-h-[90vh]" />
         ) : listings.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center py-16 text-center rounded-xl border border-dashed border-border bg-muted/30">
             <div className="bg-background p-4 rounded-full border shadow-sm mb-4">
