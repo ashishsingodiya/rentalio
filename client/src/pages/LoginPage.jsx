@@ -52,7 +52,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[82vh] flex items-center justify-center p-4">
+    <div className="min-h-[90vh] flex items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle>Welcome back</CardTitle>

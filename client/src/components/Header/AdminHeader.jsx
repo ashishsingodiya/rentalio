@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, Heart, Calendar, PackageCheck, HelpCircle, User, LogOut, Menu, X, PlusCircle, List, LayoutDashboard } from "lucide-react";
+import { Home, Search, HelpCircle, LogOut, Menu, X, List, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { Building2, CheckCircle, Clock, XCircle, FileText, ChevronDown, X, MapPin, BedDouble, Bath, Maximize2, Car, Wifi, AirVent, Dumbbell, Shield, Waves, Trees, Eye, Star, Home } from "lucide-react";
+import { useAppContext } from "../../context/AppContext";
 
 const STATUS_TABS = ["all", "review", "published", "rejected", "rented", "draft"];
 
@@ -47,6 +48,12 @@ const AdminListings = () => {
   const [selectedListing, setSelectedListing] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   const [togglingFeatureId, setTogglingFeatureId] = useState(null);
+
+  useEffect(() => {
+    if (!appLoading && (!user || user.role !== "admin")) {
+      navigate("/");
+    }
+  }, [user, appLoading]);
 
   useEffect(() => {
     const fetchListings = async () => {
