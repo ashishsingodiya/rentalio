@@ -249,6 +249,8 @@ const OwnerCreateListing = () => {
                         <SelectItem value="house">House</SelectItem>
                         <SelectItem value="studio">Studio</SelectItem>
                         <SelectItem value="villa">Villa</SelectItem>
+                        <SelectItem value="pg">PG</SelectItem>
+                        <SelectItem value="hostel">Hostel</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
