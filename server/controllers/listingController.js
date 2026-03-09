@@ -170,7 +170,7 @@ export const adminGetAllListings = async (req, res) => {
 export const adminUpdateListingStatus = async (req, res) => {
   try {
     const { listingId, status } = req.body;
-    const validStatuses = ["draft", "review", "published", "rejected"];
+    const validStatuses = ["draft", "review", "published", "rejected", "rented"];
     if (!validStatuses.includes(status)) {
       return res.json({ success: false, message: "Invalid status" });
     }

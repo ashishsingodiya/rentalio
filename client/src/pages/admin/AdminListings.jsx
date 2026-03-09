@@ -6,16 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { Building2, CheckCircle, Clock, XCircle, FileText, ChevronDown, X, MapPin, BedDouble, Bath, Maximize2, Car, Wifi, AirVent, Dumbbell, Shield, Waves, Trees, Eye, Star } from "lucide-react";
+import { Building2, CheckCircle, Clock, XCircle, FileText, ChevronDown, X, MapPin, BedDouble, Bath, Maximize2, Car, Wifi, AirVent, Dumbbell, Shield, Waves, Trees, Eye, Star, Home } from "lucide-react";
 
-const STATUS_TABS = ["all", "review", "published", "rejected", "draft"];
+const STATUS_TABS = ["all", "review", "published", "rejected", "rented", "draft"];
 
 const statusBadgeClass = (status) => {
   const map = {
     review: "text-yellow-600 border-yellow-300 bg-yellow-50",
     published: "text-green-600 border-green-300 bg-green-50",
     rejected: "text-red-600 border-red-300 bg-red-50",
-    draft: "text-gray-600 border-gray-300 bg-gray-50",
+    rented: "text-purple-600 border-purple-300 bg-purple-50",
   };
   return map[status] || "";
 };
@@ -34,8 +34,9 @@ const amenityIcons = {
 
 const STATUS_ACTIONS = {
   review: ["published", "rejected"],
-  published: ["rejected", "draft"],
+  published: ["rejected", "rented", "draft"],
   rejected: ["published", "draft"],
+  rented: ["published", "draft"],
   draft: ["published", "rejected"],
 };
 
@@ -106,6 +107,8 @@ const AdminListings = () => {
     { label: "Total", value: listings.length, icon: Building2, color: "text-blue-600", bg: "bg-blue-50" },
     { label: "In Review", value: listings.filter((l) => l.status === "review").length, icon: Clock, color: "text-yellow-600", bg: "bg-yellow-50" },
     { label: "Published", value: listings.filter((l) => l.status === "published").length, icon: CheckCircle, color: "text-green-600", bg: "bg-green-50" },
+    { label: "Rented", value: listings.filter((l) => l.status === "rented").length, icon: Home, color: "text-purple-600", bg: "bg-purple-50" },
+    { label: "Featured", value: listings.filter((l) => l.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
     { label: "Rejected", value: listings.filter((l) => l.status === "rejected").length, icon: XCircle, color: "text-red-600", bg: "bg-red-50" },
     { label: "Draft", value: listings.filter((l) => l.status === "draft").length, icon: FileText, color: "text-gray-600", bg: "bg-gray-50" },
   ];
@@ -120,7 +123,7 @@ const AdminListings = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
         {stats.map((s) => (
           <div key={s.label} className="rounded-xl border bg-card p-4 space-y-2">
             <div className={`w-8 h-8 rounded-lg ${s.bg} flex items-center justify-center`}>
@@ -135,7 +138,7 @@ const AdminListings = () => {
       {/* Tabs */}
       <div className="flex gap-2 flex-wrap">
         {STATUS_TABS.map((tab) => (
-          <button key={tab} onClick={() => setActiveTab(tab)} className={`px-3 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${activeTab === tab ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
+          <button key={tab} onClick={() => setActiveTab(tab)} className={`px-3 py-1.5 rounded-full text-sm font-medium capitalize transition-colors cursor-pointer ${activeTab === tab ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
             {tabLabel(tab)} ({tab === "all" ? listings.length : listings.filter((l) => l.status === tab).length})
           </button>
         ))}
@@ -169,7 +172,7 @@ const AdminListings = () => {
                 <Badge variant="outline" className={`text-xs hidden md:inline-flex ${statusBadgeClass(listing.status)}`}>
                   {listing.status}
                 </Badge>
-                  <Button
+                <Button
                   size="sm"
                   variant="outline"
                   title={listing.isFeatured ? "Remove from featured" : "Add to featured"}
@@ -207,7 +210,6 @@ const AdminListings = () => {
         <div className="fixed inset-0 z-50 flex justify-end">
           <div className="absolute inset-0 bg-black/40" onClick={() => setSelectedListing(null)} />
           <div className="relative w-full max-w-lg bg-background shadow-xl overflow-y-auto flex flex-col">
-
             <div className="flex items-center justify-between px-5 py-4 border-b sticky top-0 bg-background z-10">
               <div>
                 <h2 className="font-semibold text-base line-clamp-1">{selectedListing.title}</h2>
@@ -219,7 +221,6 @@ const AdminListings = () => {
             </div>
 
             <div className="p-5 space-y-5 flex-1">
-
               {selectedListing.gallery?.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
                   {selectedListing.gallery.slice(0, 6).map((img, i) => (
@@ -227,7 +228,6 @@ const AdminListings = () => {
                   ))}
                 </div>
               )}
-
 
               <div className="flex items-center justify-between">
                 <Badge variant="outline" className={`text-sm px-3 py-1 ${statusBadgeClass(selectedListing.status)}`}>
@@ -239,7 +239,6 @@ const AdminListings = () => {
                 </p>
               </div>
 
-
               <div className="rounded-lg border bg-muted/30 p-3 space-y-1">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Location</p>
                 <p className="text-sm font-medium flex items-center gap-1.5">
@@ -250,7 +249,6 @@ const AdminListings = () => {
                   {selectedListing.location?.city}, {selectedListing.location?.state} {selectedListing.location?.zipCode}
                 </p>
               </div>
-
 
               <div>
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Specifications</p>
@@ -274,7 +272,6 @@ const AdminListings = () => {
                 </div>
               </div>
 
-
               {selectedListing.amenities?.length > 0 && (
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Amenities</p>
@@ -291,7 +288,6 @@ const AdminListings = () => {
                 </div>
               )}
 
-
               {selectedListing.rules?.length > 0 && (
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Rules</p>
@@ -306,14 +302,12 @@ const AdminListings = () => {
                 </div>
               )}
 
-
               {selectedListing.description && (
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Description</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{selectedListing.description}</p>
                 </div>
               )}
-
 
               <div className="rounded-lg border bg-muted/30 p-3 space-y-1">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Owner</p>
@@ -323,15 +317,20 @@ const AdminListings = () => {
 
               <Separator />
 
-
               <div>
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">Change Status</p>
                 <div className="flex gap-2 flex-wrap">
-                  {(STATUS_ACTIONS[selectedListing.status] || []).map((s) => (
-                    <Button key={s} size="sm" variant={s === "published" ? "default" : s === "rejected" ? "destructive" : "outline"} disabled={updatingId === selectedListing._id} onClick={() => updateStatus(selectedListing._id, s)} className="capitalize">
-                      Mark as {s}
-                    </Button>
-                  ))}
+                  {(STATUS_ACTIONS[selectedListing.status] || []).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No status actions available for this listing.</p>
+                  ) : (
+                    <div className="flex gap-2 flex-wrap">
+                      {(STATUS_ACTIONS[selectedListing.status] || []).map((s) => (
+                        <Button key={s} size="sm" variant={s === "published" ? "default" : s === "rejected" ? "destructive" : "outline"} disabled={updatingId === selectedListing._id} onClick={() => updateStatus(selectedListing._id, s)} className="capitalize cursor-pointer">
+                          Mark as {s}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
