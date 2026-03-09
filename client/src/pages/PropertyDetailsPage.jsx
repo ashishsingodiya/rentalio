@@ -73,6 +73,12 @@ const amenityIcons = {
   Clubhouse: Building2,
 };
 
+const formatParking = (parking) => {
+  if (parking === "bike") return "Bike Only";
+  if (parking === "car_bike") return "Car & Bike";
+  return "Not Available";
+};
+
 const PropertyDetailsPage = () => {
   const { id } = useParams();
   const { user, axios, navigate } = useAppContext();
@@ -538,7 +544,7 @@ const PropertyDetailsPage = () => {
               <div className="flex items-center justify-center gap-1.5">
                 <Car className="h-4 w-4 text-primary" />
                 <p className="font-semibold text-foreground">
-                  {property.specs.parking}
+                  {formatParking(property.specs.parking)}
                 </p>
               </div>
               <p className="text-muted-foreground">Parking</p>
@@ -634,7 +640,7 @@ const PropertyDetailsPage = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Parking</span>
-                <span className="font-medium">{property.specs.parking}</span>
+                <span className="font-medium">{formatParking(property.specs.parking)}</span>
               </div>
             </div>
 
