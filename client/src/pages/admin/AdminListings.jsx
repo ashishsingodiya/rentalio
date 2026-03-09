@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { Building2, CheckCircle, Clock, XCircle, FileText, ChevronDown, X, MapPin, BedDouble, Bath, Maximize2, Car, Wifi, AirVent, Dumbbell, Shield, Waves, Trees, Eye } from "lucide-react";
+import { Building2, CheckCircle, Clock, XCircle, FileText, ChevronDown, X, MapPin, BedDouble, Bath, Maximize2, Car, Wifi, AirVent, Dumbbell, Shield, Waves, Trees, Eye, Star } from "lucide-react";
 
 const STATUS_TABS = ["all", "review", "published", "rejected", "draft"];
 
@@ -46,6 +46,7 @@ const AdminListings = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [selectedListing, setSelectedListing] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
+  const [togglingFeatureId, setTogglingFeatureId] = useState(null);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -62,6 +63,24 @@ const AdminListings = () => {
     };
     fetchListings();
   }, [appLoading]);
+
+  const toggleFeatured = async (listingId) => {
+    setTogglingFeatureId(listingId);
+    try {
+      const { data } = await axios.post("/api/listing/admin/feature", { listingId });
+      if (data.success) {
+        setListings((prev) => prev.map((l) => (l._id === listingId ? { ...l, isFeatured: data.isFeatured } : l)));
+        if (selectedListing?._id === listingId) setSelectedListing((prev) => ({ ...prev, isFeatured: data.isFeatured }));
+        toast.success(data.isFeatured ? "Added to featured" : "Removed from featured");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setTogglingFeatureId(null);
+    }
+  };
 
   const updateStatus = async (listingId, status) => {
     setUpdatingId(listingId);
@@ -150,6 +169,16 @@ const AdminListings = () => {
                 <Badge variant="outline" className={`text-xs hidden md:inline-flex ${statusBadgeClass(listing.status)}`}>
                   {listing.status}
                 </Badge>
+                  <Button
+                  size="sm"
+                  variant="outline"
+                  title={listing.isFeatured ? "Remove from featured" : "Add to featured"}
+                  disabled={togglingFeatureId === listing._id}
+                  onClick={() => toggleFeatured(listing._id)}
+                  className={`gap-1 text-xs px-2 cursor-pointer ${listing.isFeatured ? "border-amber-400 text-amber-500 hover:bg-amber-50" : "text-muted-foreground"}`}
+                >
+                  <Star className={`h-3.5 w-3.5 ${listing.isFeatured ? "fill-amber-400 text-amber-400" : ""}`} />
+                </Button>
                 <Button size="sm" variant="outline" onClick={() => setSelectedListing(listing)} className="gap-1.5 text-xs">
                   <Eye className="h-3.5 w-3.5" />
                   Details

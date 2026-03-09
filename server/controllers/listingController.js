@@ -183,3 +183,19 @@ export const adminUpdateListingStatus = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+
+export const adminToggleFeatured = async (req, res) => {
+  try {
+    const { listingId } = req.body;
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+      return res.json({ success: false, message: "Listing not found" });
+    }
+    listing.isFeatured = !listing.isFeatured;
+    await listing.save();
+    res.json({ success: true, isFeatured: listing.isFeatured });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
