@@ -81,7 +81,7 @@ const formatParking = (parking) => {
 
 const PropertyDetailsPage = () => {
   const { id } = useParams();
-  const { user, axios, navigate } = useAppContext();
+  const { user, setUser, axios, navigate } = useAppContext();
 
   const [property, setProperty] = useState(null);
   const [saved, setSaved] = useState(false);
@@ -165,6 +165,14 @@ const PropertyDetailsPage = () => {
 
       if (data.success) {
         toast.success(data.message);
+        setUser((prev) => ({
+          ...prev,
+          favourites: previousState
+            ? prev.favourites.filter(
+                (item) => (typeof item === "string" ? item : item._id) !== id,
+              )
+            : [...prev.favourites, id],
+        }));
       } else {
         setSaved(previousState);
         toast.error(data.message);
@@ -183,7 +191,7 @@ const PropertyDetailsPage = () => {
       navigate("/shortlisted", {
         state: {
           triggerCompare: true,
-          targetId: property._id,
+          x: property._id,
         },
       });
     } catch (error) {
@@ -640,7 +648,9 @@ const PropertyDetailsPage = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Parking</span>
-                <span className="font-medium">{formatParking(property.specs.parking)}</span>
+                <span className="font-medium">
+                  {formatParking(property.specs.parking)}
+                </span>
               </div>
             </div>
 

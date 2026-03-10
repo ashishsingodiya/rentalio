@@ -26,32 +26,32 @@ const ShortlistedPage = () => {
   const { axios, appLoading, user, navigate } = useAppContext();
   const location = useLocation();
 
+  const fetchShortlisted = async () => {
+    if (appLoading) return;
+
+    if (!user) {
+      setIsLoading(false);
+      toast.info("Please login first");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const { data } = await axios.get("/api/user/favourites");
+
+      if (data.success) {
+        setShortlisted(data.properties);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchShortlisted = async () => {
-      if (appLoading) return;
-
-      if (!user) {
-        setIsLoading(false);
-        toast.info("Please login first");
-        navigate("/login");
-        return;
-      }
-
-      try {
-        const { data } = await axios.get("/api/user/favourites");
-
-        if (data.success) {
-          setShortlisted(data.properties);
-        } else {
-          toast.error(data.message);
-        }
-      } catch (error) {
-        toast.error(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchShortlisted();
   }, [axios, appLoading, user]);
 
@@ -67,6 +67,9 @@ const ShortlistedPage = () => {
 
   // property details page -- > shortlist page (state read karke compare toggle)
   useEffect(() => {
+
+    // fetchShortlisted();
+
     if (!isLoading && location.state?.triggerCompare) {
       const targetId = location.state.targetId;
       const exists = shortlisted.find((p) => p._id === targetId);
