@@ -138,7 +138,7 @@ const OwnerCreateListing = () => {
 
       toast.success("Property listed successfully!");
       console.log("Success:", data);
-
+      navigate("/owner/listings");
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to create listing. Please try again.");
@@ -160,7 +160,6 @@ const OwnerCreateListing = () => {
           </CardHeader>
 
           <CardContent className="grid gap-8 px-8 py-8 lg:grid-cols-3">
-
             <div className="space-y-8">
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground/80">
@@ -313,7 +312,6 @@ const OwnerCreateListing = () => {
             </div>
 
             <div className="space-y-8">
-
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label className="text-base font-semibold">Property Rules</Label>
@@ -328,7 +326,6 @@ const OwnerCreateListing = () => {
                     <Plus className="h-4 w-4 mr-1" /> Add
                   </Button>
                 </div>
-
 
                 <div className="h-30 w-full rounded-md border bg-muted/10 p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/10">
                   {rules.length === 0 ? (
